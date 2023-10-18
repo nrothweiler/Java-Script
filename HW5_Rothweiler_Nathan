@@ -1,0 +1,424 @@
+/* PROGRAM: Craps Game
+
+	AUTHOR: Nathan Rothweiler
+	COURSE NUMBER: CIS 210
+    COURSE SECTION NUMBER: CIS 210-01D
+    INSTRUCTOR NAME: Guanyu Tian
+    PROJECT NUMBER: 5 
+    DUE DATE: 10/04/2023
+    
+SUMMARY
+
+This program simulates a player playing a craps game with at most 20 wagers. A wager is when the user rolls the dice,
+so the user will roll the dice 20 times or if the user ever loses all their money. Their will be two players that play,
+player 1 will always bet $100 on each wager. Player 2 will bet in a different way, if Player 2 has as much money as they
+started with they will bet $150, if not player 2 will bet $50. Player 1 will always roll the dice first. 
+
+
+INPUT
+	
+	- No User Input
+	
+TEST CASE OUTPUT: (Text in parenthesis are user inputs)
+
+********************************
+Wager 1: Bet Is $100
+
+Player 1 Is Rolling The Dice
+
+The Roll Is: 2
+That Is Craps! Player 1 Loses
+
+Player 1 Current Balance: $900
+Player 2 Current Balance: $1100
+******************************** 
+Wager 2: Bet Is $150
+
+Player 2 Is Rolling The Dice
+
+The Roll Is: 6
+The Point Is 6, Player 2 Rolls Again
+
+The Roll Is: 5
+The Point Is 6, Player 2 Rolls Again
+
+The Roll Is: 6
+That Is The Point! Player 2 Wins!
+
+Player 1 Current Balance: $750
+Player 2 Current Balance: $1250
+********************************
+
+ASSUMPTIONS: 
+
+	- Each player will start with $1000
+	- On each wager player 1 will bet $100
+	- Player 2 will bet $150 if they are above their starting balance & will bet $50 if they are below their starting balance
+
+*/
+
+//I didn't understand the use of all the functions
+
+import java.util.Random; //Random is used to create random values
+import java.io.*; //Allows PrintWriter class to be used
+import java.io.IOException; //Allows to write files
+
+public class HW5_Lorimier_Jacob_Johnson_Alek{
+	
+	public static int Generate_Random_Number() { //Generates random numbers to roll dice
+		
+		Random rand = new Random(); //Establishes random class
+		//Establishes a bound for random numbers
+		int upperbound = 6; 
+		int lowerbound = 1;
+		
+		//Establishes the  dice to get random values
+		int dice = rand.nextInt(upperbound) + lowerbound;
+		
+		//Returns dice result
+		return dice;
+	}
+	
+	public static int Roll_Dice(){ //Rolls dice to get a result for the user
+		
+		//Establishes dice variables to store value
+		int dice_one;
+		int dice_two;
+		
+		//Assigns value to the dice
+		dice_one = Generate_Random_Number();
+		dice_two = Generate_Random_Number();
+		
+		//Adds up the two dice
+		int dice_result = dice_one + dice_two;
+		
+		//Returns the two dice added together
+		return dice_result;
+		
+	}
+	
+	public static void Decide_Winner(int player1_balance, int player2_balance){ //Checks the winnner
+		//Variable to assign who the winner is
+		String winner;
+				
+		if (player1_balance > player2_balance){ //Checks which player had a higher balance
+			winner = "Player 1";
+		}
+		else {
+			winner = "Player 2";
+			}
+				
+		System.out.println("********************************");
+		System.out.println("The Winner Is " + winner);
+		System.out.println("Come Back Soon!");
+		System.out.println("********************************");
+	}
+	
+	public static void main (String [] args) throws IOException{
+		
+		//Establishes variables for program
+		int player1_balance = 1000;
+		int player2_balance = 1000;
+		int player1_dice;
+		int player2_dice;
+		int player1_bet = 100;
+		int player2_bet;
+		
+		
+		int wager = 1;
+		int point;
+		
+		String roller = "Player 1";
+		
+		//Creates a writer
+		PrintWriter outputFile = new PrintWriter("game.txt");
+		
+		while (wager < 21 && player1_balance > 0 && player2_balance > 0) {
+			
+			if (roller == "Player 1") { //Code if player 1 is the roller
+				System.out.println("********************************");
+				System.out.println("Wager " + wager + ": Bet Is $" + player1_bet + "\n");
+				System.out.println(roller + " Is Rolling The Dice! \n");
+				
+				outputFile.println("********************************");
+				outputFile.println("Wager " + wager + ": Bet Is $" + player1_bet + "\n");
+				outputFile.println(roller + " Is Rolling The Dice! \n");
+				
+				player1_dice = Roll_Dice();
+				
+				if (player1_dice == 7 || player1_dice == 11) { //If roller hits 7 or 11 they win
+					
+					System.out.println("The Roll Is " + player1_dice);
+					System.out.println("That's A Natural! Player 1 Wins!\n");
+					
+					outputFile.println("The Roll Is " + player1_dice);
+					outputFile.println("That's A Natural! Player 1 Wins!\n");
+					
+					//Calculates balance
+					player1_balance = player1_balance + player1_bet;
+					
+					System.out.println("Player 1 Current Balance: $" + player1_balance);
+					System.out.println("Player 2 Current Balance: $" + player2_balance);
+					
+					outputFile.println("Player 1 Current Balance: $" + player1_balance);
+					outputFile.println("Player 2 Current Balance: $" + player2_balance);
+					
+					//Increases wager by one
+					wager++;
+				}
+				else if (player1_dice == 2 || player1_dice == 3 || player1_dice == 12){ //If roller hits 2, 3, or 12 they lose
+					
+					System.out.println("The Roll Is " + player1_dice);
+					System.out.println("That's Craps! Player 1 Losses!\n");
+					
+					outputFile.println("The Roll Is " + player1_dice);
+					outputFile.println("That's Craps! Player 1 Losses!\n");
+					
+					//Calculates balance
+					player1_balance = player1_balance - player1_bet;
+					player2_balance = player2_balance + player1_bet;
+					
+					System.out.println("Player 1 Current Balance: $" + player1_balance);
+					System.out.println("Player 2 Current Balance: $" + player2_balance);
+					
+					outputFile.println("Player 1 Current Balance: $" + player1_balance);
+					outputFile.println("Player 2 Current Balance: $" + player2_balance);
+					
+					//Sets player 2 as roller after player 1 loses
+					roller = "Player 2";
+					
+					//Increases wager by one
+					wager++;
+				}
+				else { //If user hits anything they established the point
+					
+					point = player1_dice;
+					System.out.println("The Roll Is " + player1_dice);
+					System.out.println("The Point Is " + point + ", Player 1 Rolls Again!\n");
+					
+					outputFile.println("The Roll Is " + player1_dice);
+					outputFile.println("The Point Is " + point + ", Player 1 Rolls Again!\n");
+					
+					//While loops keeps roll going until a result is determine
+					int x = 0;
+					while (x < 1) {
+						
+						player1_dice = Roll_Dice();
+						
+						if (player1_dice == point){ //If user hits the point for a second time
+							
+							System.out.println("The Roll Is " + player1_dice);
+							System.out.println("That Is The Point! Player 1 Wins!\n");
+							
+							outputFile.println("The Roll Is " + player1_dice);
+							outputFile.println("That Is The Point! Player 1 Wins!\n");
+							
+							//Calculates balance
+							player1_balance = player1_balance + player1_bet;
+							
+							System.out.println("Player 1 Current Balance: $" + player1_balance);
+							System.out.println("Player 2 Current Balance: $" + player2_balance);
+							
+							outputFile.println("Player 1 Current Balance: $" + player1_balance);
+							outputFile.println("Player 2 Current Balance: $" + player2_balance);
+							
+							//Increases wager by one
+							wager++;
+							
+							//Breaks loop
+							break;
+						}
+						else if (player1_dice == 7){ //If user hits a seven
+							
+							System.out.println("The Roll Is " + player1_dice);
+							System.out.println("That's Craps! Player 1 Losses!\n");
+							
+							outputFile.println("The Roll Is " + player1_dice);
+							outputFile.println("That's Craps! Player 1 Losses!\n");
+							
+							//Calculates balance
+							player1_balance = player1_balance - player1_bet;
+							player2_balance = player2_balance + player1_bet;
+							
+							System.out.println("Player 1 Current Balance: $" + player1_balance);
+							System.out.println("Player 2 Current Balance: $" + player2_balance);
+							
+							outputFile.println("Player 1 Current Balance: $" + player1_balance);
+							outputFile.println("Player 2 Current Balance: $" + player2_balance);
+							
+							roller = "Player 2";
+							
+							//Increases wager by one
+							wager++;
+							
+							break;
+						}
+						else { //If user hits any other value
+							
+							System.out.println("The Roll Is " + player1_dice);
+							System.out.println("The Point Is " + point + ", Player 1 Rolls Again!\n");
+							
+							outputFile.println("The Roll Is " + player1_dice);
+							outputFile.println("The Point Is " + point + ", Player 1 Rolls Again!\n");
+						}
+					}
+				}
+			}
+		
+			if (roller == "Player 2"){ //Code if player 2 is the roller
+				System.out.println("********************************");
+				outputFile.println("********************************");
+				
+				if (player2_balance < 1000){ //Checks player 2 balance to determine bet size
+					player2_bet = 50;
+				}
+				else {
+					player2_bet = 150;
+				}
+				
+				System.out.println("Wager " + wager + ": Bet Is $" + player2_bet + "\n");
+				System.out.println(roller + " Is Rolling The Dice! \n");
+				
+				outputFile.println("Wager " + wager + ": Bet Is $" + player2_bet + "\n");
+				outputFile.println(roller + " Is Rolling The Dice! \n");
+				
+				player2_dice = Roll_Dice();
+				
+				if (player2_dice == 7 || player2_dice == 11) { //If roller hits 7 or 11 they win
+					
+					System.out.println("The Roll Is " + player2_dice);
+					System.out.println("That's A Natural! Player 2 Wins!\n");
+					
+					outputFile.println("The Roll Is " + player2_dice);
+					outputFile.println("That's A Natural! Player 2 Wins!\n");
+					
+					//Calculates balance
+					player2_balance = player2_balance + player2_bet;
+					
+					System.out.println("Player 1 Current Balance: $" + player1_balance);
+					System.out.println("Player 2 Current Balance: $" + player2_balance);
+					
+					outputFile.println("Player 1 Current Balance: $" + player1_balance);
+					outputFile.println("Player 2 Current Balance: $" + player2_balance);
+					
+					//Increases wager by one
+					wager++;
+				}
+				else if (player2_dice == 2 || player2_dice == 3 || player2_dice == 12){ //If roller hits 2, 3, or 12 they lose
+					
+					System.out.println("The Roll Is " + player2_dice);
+					System.out.println("That's Craps! Player 2 Losses!\n");
+					
+					outputFile.println("The Roll Is " + player2_dice);
+					outputFile.println("That's Craps! Player 2 Losses!\n");
+					
+					//Calculates balance
+					player2_balance = player2_balance - player2_bet;
+					player1_balance = player1_balance + player2_bet;
+					
+					System.out.println("Player 1 Current Balance: $" + player1_balance);
+					System.out.println("Player 2 Current Balance: $" + player2_balance);
+					
+					outputFile.println("Player 1 Current Balance: $" + player1_balance);
+					outputFile.println("Player 2 Current Balance: $" + player2_balance);
+					
+					//Sets player 2 as roller after player 1 loses
+					roller = "Player 1";
+					
+					//Increases wager by one
+					wager++;
+				}
+				else { //If user hits anything they established the point
+					
+					point = player2_dice;
+					System.out.println("The Roll Is " + player2_dice);
+					System.out.println("The Point Is " + point + ", Player 2 Rolls Again!\n");
+					
+					outputFile.println("The Roll Is " + player2_dice);
+					outputFile.println("The Point Is " + point + ", Player 2 Rolls Again!\n");
+					
+					//While loops keeps roll going until a result is determine
+					int x = 0;
+					while (x < 1) {
+						
+						player2_dice = Roll_Dice();
+						
+						if (player2_dice == point){ //If user hits the point for a second time
+							
+							System.out.println("The Roll Is " + player2_dice);
+							System.out.println("That Is The Point! Player 2 Wins!\n");
+							
+							outputFile.println("The Roll Is " + player2_dice);
+							outputFile.println("That Is The Point! Player 2 Wins!\n");
+							
+							//Calculates balance
+							player2_balance = player2_balance + player2_bet;
+							
+							System.out.println("Player 1 Current Balance: $" + player1_balance);
+							System.out.println("Player 2 Current Balance: $" + player2_balance);
+							
+							outputFile.println("Player 1 Current Balance: $" + player1_balance);
+							outputFile.println("Player 2 Current Balance: $" + player2_balance);
+							
+							//Increases wager by one
+							wager++;
+							
+							//Breaks loop
+							break;
+						}
+						else if (player2_dice == 7){ //If user hits a seven
+							
+							System.out.println("The Roll Is " + player2_dice);
+							System.out.println("That's Craps! Player 2 Losses!\n");
+							
+							outputFile.println("The Roll Is " + player2_dice);
+							outputFile.println("That's Craps! Player 2 Losses!\n");
+							
+							//Calculates balance
+							player2_balance = player2_balance - player2_bet;
+							player1_balance = player1_balance + player2_bet;
+							
+							System.out.println("Player 1 Current Balance: $" + player1_balance);
+							System.out.println("Player 2 Current Balance: $" + player2_balance);
+							
+							outputFile.println("Player 1 Current Balance: $" + player1_balance);
+							outputFile.println("Player 2 Current Balance: $" + player2_balance);
+							
+							roller = "Player 1";
+							
+							//Increases wager by one
+							wager++;
+							
+							break;
+						}
+						else { //If user hits any other value
+							
+							System.out.println("The Roll Is " + player2_dice);
+							System.out.println("The Point Is " + point + ", Player 2 Rolls Again!\n");
+							
+							outputFile.println("The Roll Is " + player2_dice);
+							outputFile.println("The Point Is " + point + ", Player 2 Rolls Again!\n");
+						}
+					}
+				}	
+			}
+		}
+		
+		Decide_Winner(player1_balance, player2_balance);				
+		
+		String winner;
+		
+		if (player1_balance > player2_balance){ //Checks which player had a higher balance
+			winner = "Player 1";
+		}
+		else {
+			winner = "Player 2";
+			}
+				
+		outputFile.println("********************************");
+		outputFile.println("The Winner Is " + winner);
+		outputFile.println("Come Back Soon!");
+		outputFile.println("********************************");
+		
+		outputFile.close(); //Closes writer
+	
