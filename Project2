@@ -1,0 +1,58 @@
+/*
+AUTHOR: Nathan Rothweiler
+COURSE NUMBER: CIS 210
+COURSE SECTION NUMBER: 210
+INSTRUCTOR NAME: Guanyu Tian
+PROJECT NUMBER: 2
+DUE DATE: 09/13/2023
+*/
+import java.util.Scanner;
+
+public class assignment2{
+	public static void main(String[] args) {
+		
+		//Creates scanner for user inputs
+		Scanner input = new Scanner(System.in); 
+		
+		//All variables for program
+		String name; 
+		int sharesBuy;
+		double buyPrice;
+		int sharesSell;
+		double sellPrice;
+		double brokerBuy;
+		double brokerSell;
+		double total;
+		
+		//adding user input to the variables and asking the questions
+		System.out.print("Please enter your name: ");
+		name = input.nextLine();
+		
+		System.out.print("Please enter the amount of shares you bought: ");
+		sharesBuy = input.nextInt();
+		
+		System.out.print("Purchase price: ");
+		buyPrice = input.nextDouble();
+		
+		System.out.print("Number of shares you want to sell: ");
+		sharesSell = input.nextInt();
+		
+		System.out.print("Sold price: ");
+		sellPrice = input.nextDouble();
+		
+		//Math for figuring out broker fees and totals
+		brokerBuy = (sharesBuy * buyPrice) * .02;
+		brokerSell = (sharesSell * sellPrice) * .02;
+		total =  (sharesSell * sellPrice) - (sharesBuy * buyPrice) - brokerBuy - brokerSell ;
+			
+		
+		
+		//Printing out final statement to user
+		System.out.println(name +" has purchased " + sharesBuy +" shares at $" +buyPrice +" a share, and then sold " +sharesSell +" shares at $" +sellPrice +" a share." +" They payed $" +brokerBuy 
+				+" for a broker fee when buying the stock, and $" +brokerSell +" for a broker fee when selling the stock. So their profit is $" +total );
+		
+		//Close input
+		input.close();
+		
+	}
+}
